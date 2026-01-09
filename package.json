@@ -1,0 +1,20 @@
+{
+  "name": "navi",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+	"dev:css": "tailwindcss -i styles/input.css -o public/tailwind.css --watch",
+	"build:css": "tailwindcss -i styles/input.css -o public/tailwind.css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "@types/bun": "latest",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

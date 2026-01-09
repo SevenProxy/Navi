@@ -1,0 +1,13 @@
+/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.container {
+  width: 100%;
+}
+.table {
+  display: table;
+}
