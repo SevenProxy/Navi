@@ -4,6 +4,8 @@ use yew::prelude::*;
 use components::{
     header::HeaderRoot,
     navbar::NavbarRoot,
+    desktop::DesktopRoot,
+    window::WindowRoot,
 };
 
 
@@ -12,9 +14,12 @@ fn App() -> Html {
 
     html!{
         <div class="bg-black h-screen overflow-hidden">
-            <div>
+            <div class="h-full">
                 <HeaderRoot />
-                <main>
+                <main class="h-full">
+                    <DesktopRoot>
+                        <WindowRoot />
+                    </DesktopRoot>
                 </main>
                 <NavbarRoot />
             </div>
