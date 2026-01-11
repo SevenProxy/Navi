@@ -1,11 +1,10 @@
 export default {
 	content: [
 		"./src/**/*.rs",
-		"./src/*.rs",
 		"./index.html",
 	],
-	theme: {
-		extend: {},
-	},
-	plugins: [],
-}
+	safelist: [
+		"bg-red-600",
+		"text-red-600",
+	],
+};
