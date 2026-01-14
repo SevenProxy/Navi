@@ -1,3 +1,6 @@
 mod index;
 
-pub use index::WindowRoot;
+pub use index::{
+    WindowRoot,
+    PropsWindow,
+};

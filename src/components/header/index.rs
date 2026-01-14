@@ -4,7 +4,7 @@ use yew::prelude::*;
 pub fn HeaderRoot() -> Html {
 
     html! {
-        <header class="w-full h-fit p-0">
+        <header class="w-full h-fit p-0 relative z-20">
             <div class="bg-pink-300 text-black flex items-center relative justify-start gap-2 max-h-[30px]">
                 <div class="py-0 flex items-center justify-center">
                     <button class="border-0">

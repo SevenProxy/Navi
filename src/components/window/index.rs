@@ -1,7 +1,19 @@
 use yew::prelude::*;
 
+#[derive(Properties, PartialEq, Clone)]
+pub struct PropsWindow {
+    #[prop_or_default]
+    pub children: Children,
+
+    pub name_window: String,
+
+    pub style_custom: String,
+
+    pub sub_style: String,
+}
+
 #[component]
-pub fn WindowRoot() -> Html {
+pub fn WindowRoot(props: &PropsWindow) -> Html {
     let position = use_state(|| (100, 100));
     let dragging = use_state(|| false);
     let last_mouse = use_state(|| (0, 0));
@@ -46,9 +58,11 @@ pub fn WindowRoot() -> Html {
         position.0, position.1
     );
 
+    let class_window = format!("font-bold text-base absolute z-10 bg-back border-2 border-solid border-pink-300 {}", &props.style_custom);
+
     html!{
         <section
-            class="font-bold text-base absolute z-10 w-[400px] h-[500px] bg-back border-2 border-solid border-pink-300"
+            class={&class_window}
             onmousemove={on_mousemove}
             onmouseup={on_mouseup}
             style={style}
@@ -60,14 +74,14 @@ pub fn WindowRoot() -> Html {
                 </div>
                 <div class="flex items-center justify-between gap-2 w-full">
                     <span class="h-2 w-full bg-pink-600"/>
-                    <p class="whitespace-nowrap">{"[ Minha janela ]"}</p>
+                    <p class="whitespace-nowrap">{"[ "} {&props.name_window} {" ]"}</p>
                     <span class="h-2 w-full bg-pink-600"/>
                 </div>
                 <button class="w-[50px] h-[25px] border-[7px] border-solid border-pink-600 bg-pink-300">
                 </button>
             </div>
-            <div class="px-5 h-full text-white">
-                {"contextoooooooo"}
+            <div class={&props.sub_style}>
+                { for props.children.iter() }
             </div>
         </section>
     }

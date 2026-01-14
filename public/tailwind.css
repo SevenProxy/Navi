@@ -574,24 +574,40 @@ video {
   left: 0px;
 }
 
+.z-0 {
+  z-index: 0;
+}
+
 .z-10 {
   z-index: 10;
+}
+
+.z-20 {
+  z-index: 20;
 }
 
 .flex {
   display: flex;
 }
 
+.h-2 {
+  height: 0.5rem;
+}
+
+.h-\[25px\] {
+  height: 25px;
+}
+
 .h-\[30px\] {
   height: 30px;
 }
 
-.h-\[400px\] {
-  height: 400px;
-}
-
 .h-\[40px\] {
   height: 40px;
+}
+
+.h-\[500px\] {
+  height: 500px;
 }
 
 .h-fit {
@@ -607,22 +623,6 @@ video {
   height: 100vh;
 }
 
-.h-\[20px\] {
-  height: 20px;
-}
-
-.h-\[25px\] {
-  height: 25px;
-}
-
-.h-2 {
-  height: 0.5rem;
-}
-
-.h-\[500px\] {
-  height: 500px;
-}
-
 .max-h-\[30px\] {
   max-height: 30px;
 }
@@ -631,12 +631,20 @@ video {
   max-height: 40px;
 }
 
+.w-\[25px\] {
+  width: 25px;
+}
+
 .w-\[2px\] {
   width: 2px;
 }
 
-.w-\[300px\] {
-  width: 300px;
+.w-\[50px\] {
+  width: 50px;
+}
+
+.w-\[600px\] {
+  width: 600px;
 }
 
 .w-\[70px\] {
@@ -645,26 +653,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[60px\] {
-  width: 60px;
-}
-
-.w-\[50px\] {
-  width: 50px;
-}
-
-.w-\[30px\] {
-  width: 30px;
-}
-
-.w-\[25px\] {
-  width: 25px;
-}
-
-.w-\[400px\] {
-  width: 400px;
 }
 
 .cursor-move {
@@ -699,6 +687,14 @@ video {
   overflow: hidden;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -709,18 +705,6 @@ video {
 
 .border-2 {
   border-width: 2px;
-}
-
-.border-4 {
-  border-width: 4px;
-}
-
-.border-\[10px\] {
-  border-width: 10px;
-}
-
-.border-\[6px\] {
-  border-width: 6px;
 }
 
 .border-\[7px\] {
@@ -751,14 +735,14 @@ video {
   background-color: rgb(249 168 212 / var(--tw-bg-opacity, 1));
 }
 
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
-}
-
 .bg-pink-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(219 39 119 / var(--tw-bg-opacity, 1));
+}
+
+.bg-red-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
 }
 
 .p-0 {
@@ -824,4 +808,11 @@ video {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.lain-window {
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 300px;
+  max-height: 300px;
 }
