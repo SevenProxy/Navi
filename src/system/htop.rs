@@ -69,9 +69,13 @@ pub fn Htop() -> Html {
             {
                 for storage_data.iter().map(|(k,v)| {
                     match v.as_str() {
-                        "terminal" => html! { <Terminal key="{k}" />},
-                        "lain" => html! { <Lain key="{k}"/>},
-                        _ => html! { <div></div> }
+                        "terminal" => html!{
+                            <Terminal key={k.clone()} />
+                        },
+                        "lain" => html!{
+                            <Lain key={k.clone()}/>
+                        },
+                        _ => html! { <></> }
                     }
                 })
             }

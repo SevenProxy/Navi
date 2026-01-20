@@ -8,7 +8,7 @@ pub fn Terminal() -> Html {
         PropsWindow {
             name_window: "Terminal".to_string(),
             style_custom: "w-[600px] h-[500px] z-0".to_string(),
-            sub_style: "overflow-y-auto overflow-x-hidden px-5 h-full text-white",
+            sub_style: "bg-black overflow-y-auto overflow-x-hidden px-5 h-full text-white",
         }
     };
 
