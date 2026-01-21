@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
-pub struct PropsWindow {
+pub struct PropsWindowLucy {
     #[prop_or_default]
     pub children: Children,
 
@@ -13,7 +13,7 @@ pub struct PropsWindow {
 }
 
 #[component]
-pub fn WindowRoot(props: &PropsWindow) -> Html {
+pub fn WindowLucyRoot(props: &PropsWindowLucy) -> Html {
     let position = use_state(|| (100, 100));
     let dragging = use_state(|| false);
     let last_mouse = use_state(|| (0, 0));

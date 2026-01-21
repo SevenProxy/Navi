@@ -5,11 +5,7 @@ use yew::prelude::*;
 use components::{
     header::HeaderRoot,
     navbar::NavbarRoot,
-    desktop::DesktopRoot,
-    window::{
-        WindowRoot,
-        PropsWindow,
-    },
+    desktop::DesktopRoot, 
     bin,
 };
 

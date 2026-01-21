@@ -1,11 +1,11 @@
 use yew::prelude::*;
-use crate::WindowRoot;
-use crate::PropsWindow;
+use crate::system::WindowLucyRoot;
+use crate::system::PropsWindowLucy;
 
 #[component]
 pub fn Terminal() -> Html {
     let window_props_terminal = yew::props! {
-        PropsWindow {
+        PropsWindowLucy {
             name_window: "Terminal".to_string(),
             style_custom: "w-[600px] h-[500px] z-0".to_string(),
             sub_style: "bg-black overflow-y-auto overflow-x-hidden px-5 h-full text-white",
@@ -14,7 +14,7 @@ pub fn Terminal() -> Html {
 
 
     html!{
-        <WindowRoot ..window_props_terminal>
+        <WindowLucyRoot ..window_props_terminal>
             <div>
                 <div class="">
                     <p>{"Lain @2026"}</p>
@@ -40,6 +40,6 @@ pub fn Terminal() -> Html {
                 <div class="w-full my-2">
                 </div>
             </div>
-        </WindowRoot>
+        </WindowLucyRoot>
     }
 }
