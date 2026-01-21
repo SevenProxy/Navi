@@ -6,7 +6,7 @@ pub struct Props {
 }
 
 #[component]
-pub fn DesktopRoot(props: &Props) -> Html {
+pub fn PantheonDesktopRoot(props: &Props) -> Html {
 
     html! {
         <div class="w-full h-full relative">

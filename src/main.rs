@@ -4,12 +4,14 @@ mod system;
 use yew::prelude::*;
 use components::{
     header::HeaderRoot,
-    navbar::NavbarRoot,
-    desktop::DesktopRoot, 
+    navbar::NavbarRoot, 
     bin,
 };
 
-use system::Htop;
+use system::{
+    Htop,
+    PantheonDesktopRoot,
+};
 
 
 #[component]
@@ -20,9 +22,9 @@ fn App() -> Html {
             <div class="h-full">
                 <HeaderRoot />
                 <main class="h-full">
-                    <DesktopRoot>
+                    <PantheonDesktopRoot>
                         <Htop/>
-                    </DesktopRoot>
+                    </PantheonDesktopRoot>
                 </main>
                 <NavbarRoot />
             </div>
