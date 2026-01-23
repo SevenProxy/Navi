@@ -1,18 +1,17 @@
 mod components;
 mod system;
+mod binare;
 
 use yew::prelude::*;
 use components::{
     header::HeaderRoot,
-    navbar::NavbarRoot, 
-    bin,
+    navbar::NavbarRoot,
 };
 
 use system::{
     Htop,
     PantheonDesktopRoot,
 };
-
 
 #[component]
 fn App() -> Html {

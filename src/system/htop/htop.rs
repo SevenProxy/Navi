@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use std::collections::HashMap;
-use crate::bin::{
-    Terminal,
+use crate::binare::{
+    Foot,
     Lain,
 };
 use crate::system::local_storage::get_all_storage_values;
@@ -23,8 +23,8 @@ pub fn Htop() -> Html {
             {
                 for storage_data.iter().map(|(k,v)| {
                     match v.as_str() {
-                        "terminal" => html!{
-                            <Terminal key={k.clone()} />
+                        "foot" => html!{
+                            <Foot key={k.clone()} />
                         },
                         "lain" => html!{
                             <Lain key={k.clone()}/>
