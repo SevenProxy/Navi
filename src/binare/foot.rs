@@ -12,11 +12,12 @@ pub fn Foot() -> Html {
     let output_history = use_state(|| Vec::<String>::new());
     let input_value = use_state(|| String::new());
 
+
     let window_props_terminal = yew::props! {
         PropsWindowLucy {
             name_window: "Terminal".to_string(),
             style_custom: "w-[600px] z-0".to_string(),
-            sub_style: "bg-black overflow-y-auto overflow-x-hidden px-2 h-full text-white",
+            sub_style: "bg-black overflow-y-auto overflow-x-hidden max-h-[500px] px-2 h-full text-white",
         }
     };
 
