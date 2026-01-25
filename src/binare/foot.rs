@@ -3,6 +3,7 @@ use web_sys::{
     HtmlInputElement,
     KeyboardEvent,
     console,
+    wasm_bindgen::JsValue,
 };
 use crate::system::WindowLucyRoot;
 use crate::system::PropsWindowLucy;
@@ -42,7 +43,15 @@ pub fn Foot() -> Html {
             }
 
             let mut new_line = (*output_history).clone();
-            new_line.push(input_value.to_string());
+
+            match input_value.as_str() {
+                "clear" => {
+                    new_line.clear();
+                }
+                _ => {
+                    new_line.push(input_value.to_string());
+                }
+            }
 
             output_history.set(new_line);
             input_value.set(String::new());
