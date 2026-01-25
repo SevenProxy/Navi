@@ -5,12 +5,13 @@ use web_sys::{
     console,
     wasm_bindgen::JsValue,
 };
+use std::collections::HashMap;
 use crate::system::WindowLucyRoot;
 use crate::system::PropsWindowLucy;
 
 #[component]
 pub fn Foot() -> Html {
-    let output_history = use_state(|| Vec::<String>::new());
+    let output_history = use_state(|| Vec::<HashMap<String, Vec<String>>>::new());
     let input_value = use_state(|| String::new());
 
 
@@ -47,9 +48,19 @@ pub fn Foot() -> Html {
             match input_value.as_str() {
                 "clear" => {
                     new_line.clear();
-                }
+                },
+                "whoami" => {
+                    let mut map = HashMap::new();
+                    map.insert(input_value.to_string(), vec!["proxy".to_string()]);
+                    new_line.push(map);
+                },
+                "help" => {
+                    // TODO
+                },
                 _ => {
-                    new_line.push(input_value.to_string());
+                    let mut map = HashMap::new();
+                    map.insert(input_value.to_string(), vec!["Comando não foi encontrado.".to_string()]);
+                    new_line.push(map);
                 }
             }
 
@@ -85,23 +96,30 @@ pub fn Foot() -> Html {
                 </div>
 
                 <div>
-                    { for output_history.iter().map(|line| html! {
-                        <div class="w-full my-2">
-                            <div class="my-2">
-                                <div class="flex items-center">
-                                    <span class="text-pink-600">{"╭─"}</span>
-                                    <span class="text-pink-600">{"proxy"}</span>
-                                    <span>{"@"}</span>
-                                    <span class="text-pink-800">{"Skynet"}</span>
-                                    <span class="mx-1">{"in"}</span>
-                                    <span class="text-pink-600">{"/home"}</span>
-                                </div>
-                                <div class="flex items-center gap-1">
-                                    <span class="text-pink-600">{"╰─λ"}</span>
-                                    <p class="w-full text-white">{line.clone()}</p>
+                    { for output_history.iter().flat_map(|m| {
+                        m.iter().map(|(cmd, r)| html! {
+                            <div class="w-full my-2">
+                                <div class="my-2">
+                                    <div class="flex items-center">
+                                        <span class="text-pink-600">{"╭─"}</span>
+                                        <span class="text-pink-600">{"proxy"}</span>
+                                        <span>{"@"}</span>
+                                        <span class="text-pink-800">{"Skynet"}</span>
+                                        <span class="mx-1">{"in"}</span>
+                                        <span class="text-pink-600">{"/home"}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-pink-600">{"╰─λ"}</span>
+                                        <p class="w-full text-white">{ cmd.clone() }</p>
+                                    </div>
+                                    <div>
+                                        { for r.iter().map(|line| html! {
+                                            <p>{ line.clone() }</p>
+                                        })}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        })
                     }) }
                 </div>
 
