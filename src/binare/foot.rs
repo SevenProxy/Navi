@@ -9,11 +9,116 @@ use std::collections::HashMap;
 use crate::system::WindowLucyRoot;
 use crate::system::PropsWindowLucy;
 
+#[derive(Debug)]
+enum Command {
+    Clear,
+    Whoami,
+    Help,
+    Neofetch,
+    Unknown(String),
+}
+
+fn neofetch_block() -> HashMap<String, Vec<String>> {
+    let mut block = HashMap::new();
+    let banner = vec![
+        "         Lain@2026".into(),
+        "⠀⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡢⡀⠀⠀⠀⠀".into(),
+        "⠀⠀⠀⢄⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦".into(),
+        "⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧".into(),
+        " ⢨⣿⡿⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇".into(),
+        " ⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀".into(),
+        "⢈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⠀".into(),
+        "⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⡇⠀⢸⢹⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧".into(),
+        "⠈⣿⣿⣿⣿⣿⠧⠯⠟⠿⠧⠀⠀⠀⠸⠿⠿⢼⣿⠿⢿⣟⣿⣿⣿⣿⣿⣇".into(),
+        "⠀⣿⣿⣿⣿⡿⢰⠺⣿⠉⠂⠀⠀⠀⠀⠀⠀⠚⣷⣶⠢⡀⢿⣿⣿⣿⡿⠉".into(),
+        "⢐⢻⣿⣏⠙⠇⠈⠒⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠝⠻⠥⠁⢰⡌⠹⠋⡀⡀".into(),
+        "⠀⠉⢻⣿⣦⡀⠐⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⠄⠸⢃⣰⡀⠱".into(),
+        "⠀⠀⠀⢹⣿⣿⡄⠀⠀⠀⠀⠀⠀⡀⡀⠀⠀⠀⠀⠀⠀⢀⣶⣿⣿⡟⠁".into(),
+        "⠀⠀⠘⣸⢿⣿⣿⣦⡀⠀⠀⠀⠀⠠⠄⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣇".into(),
+        "⠀⠀⠀⠉⠞⠿⠛⠿⠿⢶⣄⠀⠀⠀⠀⠀⠀⠀⣠⡾⠿⠿⣿⣿⡿⠅⠀⠀⠀".into(),
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣶⣤⣤⣤⡴⠊⠀⡧⠀⠀⣿⣿⣇".into(),
+        "⠀⠀⠀⠀⠀⠀⠀⠀⣀⡞⠛⠿⣿⣿⠟⠋⠀⠀⠀⠱⣀⠈⣿⣿⡁".into(),
+        "⠀⠀⠀⠀⠀⢠⡠⠔⠋⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠙⠲⣿⣧".into(),
+        "⢀⠔⠒⠀⠉⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠉⠚⠤⢔".into(),
+    ];
+
+    block.insert(
+        "neofetch".into(),
+        banner,
+    );
+
+    block
+}
+
+fn parse_command(input: &str) -> Command {
+    let input = input.trim();
+
+    let mut parts = input.split_whitespace();
+    let cmd = parts.next();
+
+    match cmd {
+        Some("clear") => Command::Clear,
+        Some("whoami") => Command::Whoami,
+        Some("help") => Command::Help,
+        Some("neofetch") => Command::Neofetch,
+        Some(other) => Command::Unknown(other.to_string()),
+        None => Command::Unknown(String::new()),
+    }
+}
+
+fn run_command(
+    cmd: Command,
+    lines: UseStateHandle<Vec<HashMap<String, Vec<String>>>>
+) {
+
+    match cmd {
+        Command::Clear => {
+            lines.set(Vec::new());
+        }
+
+        Command::Whoami => {
+            let mut new_blocks = (*lines).clone();
+
+            let mut block = HashMap::new();
+            block.insert("whoami".into(), vec!["proxy".into()]);
+
+            new_blocks.push(block);
+            lines.set(new_blocks);
+        }
+
+        Command::Neofetch => {
+            let mut new_blocks = (*lines).clone();
+            new_blocks.push(neofetch_block());
+            lines.set(new_blocks);
+        }
+
+        Command::Unknown(cmd) => {
+            let mut new_blocks = (*lines).clone();
+
+            let mut block = HashMap::new();
+            block.insert(cmd, vec!["Comando foi encontrado.".into()]);
+
+            new_blocks.push(block);
+            lines.set(new_blocks);
+        }
+
+        Command::Help => todo!(),
+
+    }
+}
+
 #[component]
 pub fn Foot() -> Html {
     let output_history = use_state(|| Vec::<HashMap<String, Vec<String>>>::new());
     let input_value = use_state(|| String::new());
 
+    {
+        let blocks = output_history.clone();
+        use_effect_with((), move |_| {
+            run_command(Command::Neofetch, blocks);
+            || ()
+        });
+    }
 
     let window_props_terminal = yew::props! {
         PropsWindowLucy {
@@ -43,28 +148,9 @@ pub fn Foot() -> Html {
                 return;
             }
 
-            let mut new_line = (*output_history).clone();
+            let command_cli = parse_command(&input_value.as_str());
+            run_command(command_cli, output_history.clone());
 
-            match input_value.as_str() {
-                "clear" => {
-                    new_line.clear();
-                },
-                "whoami" => {
-                    let mut map = HashMap::new();
-                    map.insert(input_value.to_string(), vec!["proxy".to_string()]);
-                    new_line.push(map);
-                },
-                "help" => {
-                    // TODO
-                },
-                _ => {
-                    let mut map = HashMap::new();
-                    map.insert(input_value.to_string(), vec!["Comando não foi encontrado.".to_string()]);
-                    new_line.push(map);
-                }
-            }
-
-            output_history.set(new_line);
             input_value.set(String::new());
         })
     };
@@ -73,27 +159,6 @@ pub fn Foot() -> Html {
     html!{
         <WindowLucyRoot ..window_props_terminal>
             <div>
-                <div class="">
-                    <p>{"Lain @2026"}</p>
-                    <p>{"⠀⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡢⡀⠀⠀⠀⠀"}</p>
-                    <p>{"⠀⠀⠀⢄⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦"}</p>
-                    <p>{"⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧"}</p>
-                    <p>{" ⢨⣿⡿⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇"}</p>
-                    <p>{" ⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀"}</p>
-                    <p>{"⢈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⠀"}</p>
-                    <p>{"⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⡇⠀⢸⢹⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧"}</p>
-                    <p>{"⠈⣿⣿⣿⣿⣿⠧⠯⠟⠿⠧⠀⠀⠀⠸⠿⠿⢼⣿⠿⢿⣟⣿⣿⣿⣿⣿⣇"}</p>
-                    <p>{"⠀⣿⣿⣿⣿⡿⢰⠺⣿⠉⠂⠀⠀⠀⠀⠀⠀⠚⣷⣶⠢⡀⢿⣿⣿⣿⡿⠉"}</p>
-                    <p>{"⢐⢻⣿⣏⠙⠇⠈⠒⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠝⠻⠥⠁⢰⡌⠹⠋⡀⡀"}</p>
-                    <p>{"⠀⠉⢻⣿⣦⡀⠐⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⠄⠸⢃⣰⡀⠱"}</p>
-                    <p>{"⠀⠀⠀⢹⣿⣿⡄⠀⠀⠀⠀⠀⠀⡀⡀⠀⠀⠀⠀⠀⠀⢀⣶⣿⣿⡟⠁"}</p>
-                    <p>{"⠀⠀⠘⣸⢿⣿⣿⣦⡀⠀⠀⠀⠀⠠⠄⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣇"}</p>
-                    <p>{"⠀⠀⠀⠉⠞⠿⠛⠿⠿⢶⣄⠀⠀⠀⠀⠀⠀⠀⣠⡾⠿⠿⣿⣿⡿⠅⠀⠀⠀"}</p>
-                    <p>{"⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣶⣤⣤⣤⡴⠊⠀⡧⠀⠀⣿⣿⣇"}</p>
-                    <p>{"⠀⠀⠀⠀⠀⠀⠀⠀⣀⡞⠛⠿⣿⣿⠟⠋⠀⠀⠀⠱⣀⠈⣿⣿⡁"}</p>
-                    <p>{"⠀⠀⠀⠀⠀⢠⡠⠔⠋⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠙⠲⣿⣧"}</p>
-                    <p>{"⢀⠔⠒⠀⠉⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠉⠚⠤⢔"}</p>
-                </div>
 
                 <div>
                     { for output_history.iter().flat_map(|m| {
