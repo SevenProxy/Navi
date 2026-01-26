@@ -15,6 +15,7 @@ enum Command {
     Whoami,
     Help,
     Neofetch,
+    Echo(String),
     Unknown(String),
 }
 
@@ -61,6 +62,10 @@ fn parse_command(input: &str) -> Command {
         Some("whoami") => Command::Whoami,
         Some("help") => Command::Help,
         Some("neofetch") => Command::Neofetch,
+        Some("echo") => {
+            let reset = parts.collect::<Vec<_>>().join(" ");
+            Command::Echo(reset)
+        },
         Some(other) => Command::Unknown(other.to_string()),
         None => Command::Unknown(String::new()),
     }
@@ -97,6 +102,16 @@ fn run_command(
 
             let mut block = HashMap::new();
             block.insert(cmd, vec!["Comando foi encontrado.".into()]);
+
+            new_blocks.push(block);
+            lines.set(new_blocks);
+        }
+
+        Command::Echo(txt) => {
+            let mut new_blocks = (*lines).clone();
+
+            let mut block = HashMap::new();
+            block.insert("echo".into(), vec![format!("{}", txt)]);
 
             new_blocks.push(block);
             lines.set(new_blocks);
