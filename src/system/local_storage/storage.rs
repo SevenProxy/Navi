@@ -26,6 +26,7 @@ pub fn get_item(key: &str) -> Option<String> {
     storage.get_item(key).unwrap()
 }
 
+
 pub fn remove_item(key: &str) {
     let storage = get_local_storage();
 
