@@ -1,4 +1,5 @@
 use yew::prelude::*;
+use std::rc::Rc;
 use gloo::timers::callback::Timeout;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -6,10 +7,38 @@ pub struct PropsStart {
     pub state: UseStateHandle<bool>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub struct BootLine {
     text: String,
     ok: bool,
+}
+
+
+#[derive(Clone, PartialEq)]
+struct BootState {
+    lines: Vec<BootLine>,
+}
+
+enum BootAction {
+    Push(BootLine),
+    Clear,
+}
+
+impl Reducible for BootState {
+    type Action = BootAction;
+
+    fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
+        match action {
+            BootAction::Push(line) => {
+                let mut lines = self.lines.clone();
+                lines.push(line);
+
+                Self { lines }.into()
+            }
+
+            BootAction::Clear => Self { lines: Vec::new() }.into(),
+        }
+    }
 }
 
 fn run_started_log() -> Vec<String> {
@@ -24,30 +53,28 @@ fn run_started_log() -> Vec<String> {
 
 #[component]
 pub fn StartRoot(props: &PropsStart) -> Html {
-    let lines = use_state(|| Vec::<BootLine>::new());
+    let states = use_reducer(|| BootState {
+        lines: Vec::new(),
+    });
     let timeout_ref = use_mut_ref(|| Vec::<Timeout>::new());
 
     {
-        let lines = lines.clone();
+        let states = states.dispatcher();
+        let props = props.clone();
         let timeout_ref = timeout_ref.clone();
 
         use_effect_with((), move |_|  {
             let delay_step = 600;
 
             for (i, v) in run_started_log().into_iter().enumerate() {
-                let lines = lines.clone();
+                let dispatch = states.clone();
                 let v = v.clone();
 
                 let time_closure = Timeout::new(i as u32 * delay_step, move || {
-                    lines.set({
-                        let mut current = (*lines).clone();
-                        current.push(BootLine {
-                            text: v,
-                            ok: true,
-                        });
-
-                        current
-                    });
+                    dispatch.dispatch(BootAction::Push(BootLine {
+                        text: v,
+                        ok: true,
+                    }));
                 });
 
                 timeout_ref.borrow_mut().push(time_closure);
@@ -62,15 +89,19 @@ pub fn StartRoot(props: &PropsStart) -> Html {
     html! {
         <div class="z-50 h-screen w-full overflow-hidden bg-black text-white">
             <div class="w-full h-full">
-                { 
-                    for lines.iter().map(|m| html! {
+                {
+                    for states.lines.iter().map(|m| html! {
                         <div class="flex items-center gap-2">
-                            <p>{"OK"}</p>
-                            <p>{&m.text}</p>
-                            <span class="animate-pulse">{"▮"}</span>
+                            <div class="text-bold flex items-center gap-2">
+                                <span>{"["}</span>
+                                <p class="text-green-600">{"OK"}</p>
+                                <span>{"]"}</span>
+                            </div>
+                            <p class="text-zinc-300">{&m.text}</p>
                         </div>
                     })
                 }
+                <span class="animate-ping">{"▮"}</span>
             </div>
         </div>
     }
