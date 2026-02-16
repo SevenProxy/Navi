@@ -2,6 +2,24 @@ use yew::prelude::*;
 use std::rc::Rc;
 use gloo::timers::callback::Timeout;
 
+#[derive(Clone, PartialEq)]
+enum TypeLog {
+    Ok,
+    Falied,
+    Null,
+}
+
+enum BootAction {
+    Push(BootLine),
+    Clear,
+}
+
+enum StartedLog {
+    Ok(String),
+    Falied(String),
+    Null(String),
+}
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct PropsStart {
     pub state: UseStateHandle<bool>,
@@ -10,7 +28,7 @@ pub struct PropsStart {
 #[derive(Clone, PartialEq)]
 pub struct BootLine {
     text: String,
-    ok: bool,
+    ok: TypeLog,
 }
 
 
@@ -19,10 +37,6 @@ struct BootState {
     lines: Vec<BootLine>,
 }
 
-enum BootAction {
-    Push(BootLine),
-    Clear,
-}
 
 impl Reducible for BootState {
     type Action = BootAction;
@@ -41,11 +55,22 @@ impl Reducible for BootState {
     }
 }
 
-fn run_started_log() -> Vec<String> {
+fn run_started_log() -> Vec<StartedLog> {
     let lines = vec![
-        "Iniciando...".into(),
-        "Feito...".into(),
-        "Compilando...".into(),
+        StartedLog::Null("starting version beta 0.1.0".into()),
+        StartedLog::Null("/dev/system/*: starging".into()),
+        StartedLog::Null("cargo check was32-unknow-unknown".into()),
+        StartedLog::Null("trunk build".into()),
+        StartedLog::Ok("Stoped Dispatch Password Requests to Console Directory Watch.".into()),
+        StartedLog::Ok("Started /home".into()),
+        StartedLog::Ok("Reached target Network".into()),
+        StartedLog::Ok("Reached target Times".into()),
+        StartedLog::Ok("Reached target Paths".into()),
+        StartedLog::Ok("Reached Emergency Shell".into()),
+        StartedLog::Ok("Reached target Sockets".into()),
+        StartedLog::Ok("Mounted target Temporary Directory (/bin)".into()),
+        StartedLog::Null("starting network time synchronization.".into()),
+        StartedLog::Ok("Completed.".into()),
     ];
 
     lines
@@ -68,13 +93,30 @@ pub fn StartRoot(props: &PropsStart) -> Html {
 
             for (i, v) in run_started_log().into_iter().enumerate() {
                 let dispatch = states.clone();
-                let v = v.clone();
 
                 let time_closure = Timeout::new(i as u32 * delay_step, move || {
-                    dispatch.dispatch(BootAction::Push(BootLine {
-                        text: v,
-                        ok: true,
-                    }));
+                    match &v {
+                        StartedLog::Ok(text) => {
+                            dispatch.dispatch(BootAction::Push(BootLine {
+                                text: text.to_string(),
+                                ok: TypeLog::Ok,
+                            }));
+                        },
+
+                        StartedLog::Falied(text) => {
+                            dispatch.dispatch(BootAction::Push(BootLine {
+                                text: text.to_string(),
+                                ok: TypeLog::Falied,
+                            }));
+                        },
+
+                        StartedLog::Null(text) => {
+                            dispatch.dispatch(BootAction::Push(BootLine {
+                                text: text.to_string(),
+                                ok: TypeLog::Null,
+                            }));
+                        },
+                    }
                 });
 
                 timeout_ref.borrow_mut().push(time_closure);
@@ -92,16 +134,33 @@ pub fn StartRoot(props: &PropsStart) -> Html {
                 {
                     for states.lines.iter().map(|m| html! {
                         <div class="flex items-center gap-2">
-                            <div class="text-bold flex items-center gap-2">
-                                <span>{"["}</span>
-                                <p class="text-green-600">{"OK"}</p>
-                                <span>{"]"}</span>
-                            </div>
+                            { match &m.ok {
+                                TypeLog::Ok => html! {
+                                    <div class="text-bold flex items-center gap-2">
+                                        <span>{"["}</span>
+                                        <p class="text-green-600 text-bold">{"OK"}</p>
+                                        <span>{"]"}</span>
+                                    </div>
+                                },
+
+                                TypeLog::Falied => html! {
+                                    <div class="text-bold flex items-center gap-2">
+                                        <span>{"["}</span>
+                                        <p class="text-red-600 text-bold">{"Falied"}</p>
+                                        <span>{"]"}</span>
+                                    </div>
+                                },
+
+                                TypeLog::Null => html! {
+                                    <div class="text-bold flex items-center gap-2">
+                                    </div>
+                                },
+                            }}
                             <p class="text-zinc-300">{&m.text}</p>
                         </div>
                     })
                 }
-                <span class="animate-ping">{"▮"}</span>
+                <span class="animate-ping mt-0 text-lg">{"▮"}</span>
             </div>
         </div>
     }
