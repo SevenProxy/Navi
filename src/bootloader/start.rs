@@ -78,6 +78,7 @@ fn run_started_log() -> Vec<StartedLog> {
 
 #[component]
 pub fn StartRoot(props: &PropsStart) -> Html {
+    let props = props.clone();
     let states = use_reducer(|| BootState {
         lines: Vec::new(),
     });
@@ -124,6 +125,7 @@ pub fn StartRoot(props: &PropsStart) -> Html {
 
             move || {
                 timeout_ref.borrow_mut().clear();
+                props.state.set(false);
             }
         });
     }
